@@ -1,8 +1,8 @@
+import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 import listingRouter from "./routes/listing.route.js";
@@ -20,47 +20,43 @@ mongoose
   });
 
 const __dirname = path.resolve();
-
 const app = express();
 
-app.use(express.json());
+// ✅ Set COOP and COEP headers to fix the window.close() issue
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  next();
+});
 
+app.use(express.json());
 app.use(cookieParser());
 
-const origins = [
-  "https://firebasestorage.googleapis.com/v0/b/real-estate-4bc6b.firebasestorage.app/o?name=1737099509612Group%20270.png",
-  "https://firebasestorage.googleapis.com/v0/b/real-estate-4bc6b.firebasestorage.app/o?name=1737099509612Group%20270.jep",
+// ✅ Fixed the CORS origin array
+const allowedOrigins = [
+  "https://prestigehorizonsestate.vercel.app",
+  "https://prestigehorizonsestate-ae8u1za53-tech-masterys-projects.vercel.app",
+  "https://prestigehorizonsestate-git-main-tech-masterys-projects.vercel.app",
 ];
 
 app.use(
   cors({
-    origin: [
-      "https://prestigehorizonsestate.vercel.app",
-      origins,
-      "https://prestigehorizonsestate-ae8u1za53-tech-masterys-projects.vercel.app",
-    ],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000!");
-});
-
+// ✅ Define routes
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
 
-// app.use(express.static(path.join(__dirname, "/client/dist")));
-
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-// });
-
+// ✅ Health check route
 app.get("/", (req, res) => {
   res.status(200).json({ message: "welcome to the app" });
 });
 
+// ✅ Global error handler
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
@@ -69,4 +65,9 @@ app.use((err, req, res, next) => {
     statusCode,
     message,
   });
+});
+
+// ✅ Start the server
+app.listen(3000, () => {
+  console.log("Server is running on port 3000!");
 });
