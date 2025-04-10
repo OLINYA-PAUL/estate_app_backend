@@ -27,15 +27,14 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-const origins = ["https://firebasestorage.googleapis.com/v0/b/real-estate-4bc6b.firebasestorage.app/o?name=1737099509612Group%20270.png" ,  "https://firebasestorage.googleapis.com/v0/b/real-estate-4bc6b.firebasestorage.app/o?name=1737099509612Group%20270.jep", 
-]
+const origins = [
+  "https://firebasestorage.googleapis.com/v0/b/real-estate-4bc6b.firebasestorage.app/o?name=1737099509612Group%20270.png",
+  "https://firebasestorage.googleapis.com/v0/b/real-estate-4bc6b.firebasestorage.app/o?name=1737099509612Group%20270.jep",
+];
 
 app.use(
   cors({
-    origin: [
-    origins,
-      "http://localhost:5173",
-    ],
+    origin: [origins, "https://prestige-horizonsestate.vercel.app"],
     credentials: true,
   })
 );
@@ -55,9 +54,8 @@ app.use("/api/listing", listingRouter);
 // });
 
 app.get("/", (req, res) => {
-  res.status(200).json({message: "welcome to the app"})
+  res.status(200).json({ message: "welcome to the app" });
 });
-
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
