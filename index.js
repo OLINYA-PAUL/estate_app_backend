@@ -34,7 +34,10 @@ const origins = [
 
 app.use(
   cors({
-    origin: [origins, "https://prestige-horizonsestate.vercel.app"],
+    origin: [
+      origins,
+      "https://prestigehorizonsestate-ae8u1za53-tech-masterys-projects.vercel.app/",
+    ],
     credentials: true,
   })
 );
